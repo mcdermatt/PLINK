@@ -29,8 +29,7 @@ Consecutive pulses from a static LiDAR sensor should in theory return the same r
 PLiNK rexamines the process through which a NeRF can be trained from LiDAR data in order to reconsile this difference from deterministic RGB data. 
 
 <!-- In the image domain, "floaters", a common (but undesirable) artifact produced by NeRFs, are clouds of disconnected material that the model learns to reproduce apparent features in training images, but do not correspond to actual surfaces in the real world.  -->
-Because 3D structure is learned indirectly when training off image data, "floater" artifacts are produced in situations where degenerate geometry under-constrains the multi-view reconstruction problem. Training directly on depth information from LiDAR data alleviates this ambiguity, however, conflicting LiDAR data over-constrains the problem, introducing another kind of "phantom surface" as shown below. 
-<!-- Rather than settling on a compromise surface to explain conflicting range data, we seek to train a network to produce a cumulative distribution of range returns along each ray, -->
+Because 3D structure is learned indirectly when training off image data, "floater" artifacts are produced in situations where degenerate geometry under-constrains the multi-view reconstruction problem. Training directly on depth information from LiDAR data alleviates this ambiguity, however, conflicting LiDAR data over-constrains the problem, introducing another kind of "phantom surface" as shown below. Attempting to directly optimize conflicting depth measurements using the traditional NeRF L2 loss regime will cause the network to learn phantom surfaces at comromise locations.
 
 <img src="./demo/CDF.png" alt="Alt text" width="400"/>
 
@@ -61,7 +60,7 @@ Allowing the implicit representation to learn multiple peaks along a given ray a
 - [X] Add citation link
 - [X] Embed 10% vs 90% CDF figure
 - [ ] Make training timelapse GIF
-- [ ] Benchmark performance on courtyard
+- [X] Benchmark performance on courtyard
 - [X] Benchmark Performance on Mai City
 - [ ] Ablation study in forest
 - [ ] Share interacive jupyter notebook demo
