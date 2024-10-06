@@ -64,6 +64,7 @@ Allowing the implicit representation to learn multiple peaks along a given ray a
 - [X] Benchmark Performance on Mai City
 - [ ] Ablation study in forest
 - [ ] Share interacive jupyter notebook demo
-- [ ] Sanitize utils functions
+- [X] clean up utils for fine network
+- [X] clean up utils for coarse network
 - [ ] Coarse to Fine notebook
 - [ ] Update documentation

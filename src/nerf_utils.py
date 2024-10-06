@@ -18,7 +18,6 @@ pos_embed_dims = 15
 rot_embed_dims = 5 
 pos_embed_dims_coarse = 10  
 rot_embed_dims_coarse = 4  
-embed_fn = posenc
 
 def posenc(x, embed_dims):
   rets = [x]
@@ -220,9 +219,9 @@ def render_rays(network_fn, rays_o, rays_d, z_vals):
     #Encode positions and directions 
     ray_pos = rays_o[...,None,:] + rays_d[...,None,:] * z_vals
     ray_pos_flat = tf.reshape(ray_pos, [-1, 3])
-    encoded_ray_pos = embed_fn(ray_pos_flat, pos_embed_dims) #10 embedding dims for pos
+    encoded_ray_pos = posenc(ray_pos_flat, pos_embed_dims) #10 embedding dims for pos
     ray_dir = tf.reshape(rays_d[..., None,:]*tf.ones_like(z_vals, dtype = tf.float32), [-1,3]) #test
-    encoded_ray_dir = embed_fn(ray_dir, rot_embed_dims)  # embedding dims for dir
+    encoded_ray_dir = posenc(ray_dir, rot_embed_dims)  # embedding dims for dir
     encoded_both = tf.concat([encoded_ray_pos, encoded_ray_dir], axis = -1)
 
     #run the netork
