@@ -70,7 +70,8 @@ def resample_z_vals(z_vals_coarse, weights_coarse, w_coarse, n_resample=128, rep
     wc = weights_coarse[:, :, :, 0]
     width_coarse = w_coarse[:, :, :, 0]
 
-    wc_padded = tf.where(tf.math.is_nan(wc), 0.001*tf.ones_like(wc), wc)
+    wc = tf.pad(wc, paddings=[[0, 0], [0, 0], [1, 0]])
+    wc_padded = tf.where(tf.math.is_nan(wc), 0.001*tf.ones_like(wc), wc)[:,:,:-1]
     
     sum_wc_padded = tf.math.reduce_sum(wc_padded, axis=-1, keepdims=True)
     epsilon = 1e-6
@@ -87,40 +88,23 @@ def resample_z_vals(z_vals_coarse, weights_coarse, w_coarse, n_resample=128, rep
 
     # Find the indices in the CDF where the random samples should be inserted
     idx = tf.searchsorted(wc_cdf, randy, side='right')
-    idx = tf.clip_by_value(idx, 1, tf.shape(wc_cdf)[-1] - 1)
 
-    # # Gather CDF and z-values for left and right indices
-    # print("idx-1", (idx-1)[0,0,...])
-    # test = tf.clip_by_value(idx-1, 0, z_vals_coarse.shape[2] - 1)
-    # print("test", test[0,0,...])
-
-    # print(tf.shape(idx))
-
-    # cdf_left = tf.gather(wc_cdf, idx - 1, batch_dims=2) #old-- doesn't work on CPUs
-    cdf_left = tf.gather(wc_cdf, tf.clip_by_value(idx-1, 0, z_vals_coarse.shape[2] - 1), batch_dims=2) #doesn't crash but kills numerics
-    # cdf_left = tf.gather(wc_cdf, tf.where(idx > 0, idx - 1, tf.shape(idx)[1]-1), batch_dims=2)
+    # Gather CDF and z-values for left and right indices
+    cdf_left = tf.gather(wc_cdf, idx - 1, batch_dims=2) #old-- doesn't work on CPUs
     cdf_right = tf.gather(wc_cdf, idx, batch_dims=2)
 
-    # print("\n cdf_left", cdf_left[0,0,...])
-    # print("\n cdf_right", cdf_right[0,0,...])
+    values_left = tf.gather(zc, idx-1, batch_dims=2) 
+    values_right = tf.gather(zc, idx, batch_dims=2)
 
-    #old
-    values_left = tf.gather(zc, idx, batch_dims=2) 
-    values_right = tf.gather(zc + width_coarse, idx, batch_dims=2)
 
     # Add epsilon to avoid division by zero during interpolation
     denom = cdf_right - cdf_left + epsilon
     denom = tf.where(denom == 0, epsilon, denom)
 
-    print("denom", denom[0,0,:30])
-
-    # print("randy - cdf_left", randy[0,0,:30] - cdf_left[0,0,:30])
 
     # Interpolate to get sample values at the LEFT edge of each histogram bin
     weights = (randy - cdf_left) / denom
     z_vals_new = values_left + weights * (values_right - values_left)
-
-    print(weights[0,0,:30])
 
     if repeat_coarse:
         z_vals_new = tf.concat([z_vals_new, z_vals_coarse[:,:,:,0]], axis = 2)

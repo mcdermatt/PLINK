@@ -5,7 +5,6 @@ import cv2
 import sys
 import os
 from scipy.interpolate import griddata
-from metpy.calc import lat_lon_grid_deltas
 from scipy.spatial.transform import Rotation as R
 from matplotlib import pyplot as plt
 import copy
