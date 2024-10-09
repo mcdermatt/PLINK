@@ -35,9 +35,15 @@ Because 3D structure is learned indirectly when training off image data, "floate
 
 By formulating loss as an integral of probability (rather than as an integral of optical density) PLiNK allows a network to learn multiple peaks for a given ray, allowing the sampling of first, $\text{n}^{\text{th}}$, or strongest returns from a single output channel. 
 
-In the figure below, the inverse cumulative distribution can be set to a low value to render nearest returns (left), a high value to render more distant returns (right), or anaywhere inbetween. The two renderings are different for directions viewing semi-transparent surfaces (windows) but identical for solid surfaces (walls).
+In the figure below, the inverse cumulative distribution can be set to a low value to render nearest returns (left), a high value to render more distant returns (right). The two renderings are different for directions viewing semi-transparent surfaces (windows) but identical for solid surfaces (walls).
 
 <img src="./demo/10v90.png" alt="Alt text" width="600"/>
+
+The gif below demonstrates the resulting point clouds for a constant sensor pose as C is adjusted between (0,1]
+
+<img src="./demo/CDFslider2.gif" alt="Alt text" width="600"/>
+
+
 
 Allowing the implicit representation to learn multiple peaks along a given ray allows PLiNK to outperfrom current SOTA LiDAR-based NeRF implementations. 
 
