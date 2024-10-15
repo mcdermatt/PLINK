@@ -162,7 +162,10 @@ def calculate_loss_coarse_network(z_vals_coarse, z_vals_fine, weights_coarse, we
 
     L = tf.reduce_sum(mask * (fine_sum - weights_coarse) * width_coarse, axis=2) #scale by width of each coarse ray
 
-    return L
+    if debug:
+        return(L, fine_sum)
+    else:
+        return(L)
 
 def gaussian_smoothing(weights, sigma=1.0):
     """simple gaussian smoothing"""

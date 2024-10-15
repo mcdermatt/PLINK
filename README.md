@@ -39,7 +39,7 @@ In the figure below, the inverse cumulative distribution can be set to a low val
 
 <img src="./demo/10v90.png" alt="Alt text" width="600"/>
 
-The gif below demonstrates the resulting point clouds for a constant sensor pose as C is adjusted between (0,1]
+The gif below demonstrates the resulting point clouds for a constant sensor pose as C is adjusted between (0,1]. For values close to 0, the rendering process produces points placed mostly on the first surface in each look direction, such as on windows and on the outermost leaves of the tree.  
 
 <img src="./demo/CDFslider2.gif" alt="Alt text" width="600"/>
 
@@ -65,12 +65,11 @@ Allowing the implicit representation to learn multiple peaks along a given ray a
 - [X] Figure out better acronym
 - [X] Add citation link
 - [X] Embed 10% vs 90% CDF figure
-- [ ] Make training timelapse GIF
 - [X] Benchmark performance on courtyard
 - [X] Benchmark Performance on Mai City
 - [ ] Ablation study in forest
 - [ ] Share interacive jupyter notebook demo
 - [X] clean up utils for fine network
 - [X] clean up utils for coarse network
-- [ ] Coarse to Fine notebook
+- [X] Coarse to Fine notebook
 - [ ] Update documentation

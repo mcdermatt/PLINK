@@ -199,7 +199,7 @@ def get_rays(H, W, c2w, phimin_patch, phimax_patch):
 
     return rays_o, rays_d
 
-def render_rays(network_fn, rays_o, rays_d, z_vals):
+def render_rays(network_fn, rays_o, rays_d, z_vals, roll_override = None):
     """given ray origins, view directions, and sample point distances, 
        call the network at specified point locations, and render the produced network output to
        produce a CDF along each ray 
@@ -244,8 +244,8 @@ def render_rays(network_fn, rays_o, rays_d, z_vals):
     #sample along CDF to produce depth output 
     # (visualization only, loss is calculted from CDF)
     roll = tf.random.uniform(tf.shape(alpha))  #true random sampling
-    # roll = 0.1*tf.ones_like(alpha) #look at early reflecting surfaces
-    # roll = 0.6*tf.ones_like(alpha) #look at more distant surfaces
+    if roll_override is not None: #look at early reflecting surfaces in nth percentile
+        roll = roll_override*tf.ones_like(alpha)
 
     hit_surfs = tf.argmax(roll < alpha, axis = -1)
     depth_map = tf.gather_nd(z_vals, hit_surfs[:,:,None], batch_dims = 2)[:,:,0]
